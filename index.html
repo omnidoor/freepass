@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자유이용권</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root {
+            --primary-gold: #d4af37;
+            --deep-blue: #13274f;
+            --cream-white: #f8f4e9;
+            --soft-gray: #e0e0e0;
+            --burgundy: #800020;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--deep-blue) 0%, #1a3c6c 100%);
+            color: var(--cream-white);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .ticket-container {
+            width: 100%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+        
+        .ticket-header {
+            background: linear-gradient(90deg, var(--primary-gold) 0%, #f4e4a6 100%);
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ticket-header h1 {
+            margin: 0;
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--deep-blue);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+        }
+        
+        .ticket-body {
+            padding: 30px;
+        }
+        
+        .terms-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--primary-gold);
+        }
+        
+        .terms-section h2 {
+            color: var(--primary-gold);
+            margin-top: 0;
+            font-size: 1.5rem;
+        }
+        
+        .terms-list {
+            padding-left: 20px;
+            line-height: 1.6;
+        }
+        
+        .terms-list li {
+            margin-bottom: 10px;
+        }
+        
+        .date-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .date-box {
+            flex: 1;
+            min-width: 200px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .date-label {
+            font-size: 0.9rem;
+            color: var(--primary-gold);
+            margin-bottom: 5px;
+        }
+        
+        .date-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        .timer-section {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+        
+        .timer-label {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--primary-gold);
+        }
+        
+        #countdown-timer {
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: var(--cream-white);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+            background: var(--burgundy);
+        }
+        
+        .active {
+            background: #2e8b57;
+        }
+        
+        .future {
+            background: #1e90ff;
+        }
+        
+        .gold-border {
+            height: 3px;
+            background: linear-gradient(90deg, transparent 0%, var(--primary-gold) 50%, transparent 100%);
+            margin: 20px 0;
+        }
+        
+        .offline-indicator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            color: var(--cream-white);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            display: none;
+        }
+        
+        @media (max-width: 600px) {
+            .ticket-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            #countdown-timer {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ticket-container">
+        <div class="offline-indicator" id="offline-indicator">오프라인</div>
+        
+        <div class="ticket-header">
+            <h1>자유이용권</h1>
+        </div>
+        
+        <div class="ticket-body">
+            <div class="terms-section">
+                <h2>이용약관</h2>
+                <ul class="terms-list">
+                    <li>본 이용권은 지정된 기간 동안 이석헌의 모든 서비스를 무제한으로 이용할 수 있는 권리를 부여합니다.</li>
+                    <li>이용권은 타인에게 양도할 수 없으며, 카탸만 사용 가능합니다.</li>
+                    <li>사용기간이 지난 경우 교환 및 환불 불가합니다.</li>
+                    <li>카탸의 키스에 대한 모든 책임은 이석헌에게 있습니다.</li>
+                </ul>
+            </div>
+            
+            <div class="gold-border"></div>
+            
+            <div class="date-section">
+                <div class="date-box">
+                    <div class="date-label">시작일</div>
+                    <div class="date-value">2025년 8월 25일 13시 05분</div>
+                </div>
+                
+                <div class="date-box">
+                    <div class="date-label">종료일</div>
+                    <div class="date-value">2025년 9월 13일 15시 30분</div>
+                </div>
+            </div>
+            
+            <div class="timer-section">
+                <div class="timer-label">사용기간</div>
+                <div id="countdown-timer">계산 중...</div>
+                <div id="status-badge" class="status-badge">확인 중</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 한국 시간 기준 계산
+        function getKoreaTime() {
+            const now = new Date();
+            const koreaTimeOffset = 9 * 60; // 한국은 UTC+9
+            const localOffset = now.getTimezoneOffset();
+            const koreaTime = new Date(now.getTime() + (koreaTimeOffset + localOffset) * 60000);
+            return koreaTime;
+        }
+
+        // 시간 계산 및 표시 함수
+        function updateCountdown() {
+            const startDate = new Date('2025-08-25T13:05:00+09:00');
+            const endDate = new Date('2025-09-13T15:30:00+09:00');
+            const now = getKoreaTime();
+            
+            const timerElement = document.getElementById('countdown-timer');
+            const statusBadge = document.getElementById('status-badge');
+            
+            if (now < startDate) {
+                // 시작 전
+                const timeLeft = startDate - now;
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                
+                timerElement.innerHTML = `${days}일 ${hours}시간 ${minutes}분 ${seconds}초`;
+                statusBadge.textContent = "시작 전";
+                statusBadge.className = "status-badge future";
+            } else if (now >= startDate && now <= endDate) {
+                // 이용 기간 중
+                const timeLeft = endDate - now;
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                
+                timerElement.innerHTML = `${days}일 ${hours}시간 ${minutes}분 ${seconds}초`;
+                statusBadge.textContent = "이용 가능";
+                statusBadge.className = "status-badge active";
+            } else {
+                // 이용 기간 종료 후
+                const timePassed = now - endDate;
+                const days = Math.floor(timePassed / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timePassed % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timePassed % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timePassed % (1000 * 60)) / 1000);
+                
+                timerElement.innerHTML = `${days}일 ${hours}시간 ${minutes}분 ${seconds}초`;
+                statusBadge.textContent = "이용 종료";
+                statusBadge.className = "status-badge";
+            }
+        }
+
+        // 오프라인 상태 확인
+        function updateOnlineStatus() {
+            const offlineIndicator = document.getElementById('offline-indicator');
+            if (!navigator.onLine) {
+                offlineIndicator.style.display = 'block';
+            } else {
+                offlineIndicator.style.display = 'none';
+            }
+        }
+
+        // 초기화
+        window.addEventListener('load', () => {
+            // 시간 계산 시작
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+            
+            // 온라인 상태 확인
+            updateOnlineStatus();
+            window.addEventListener('online', updateOnlineStatus);
+            window.addEventListener('offline', updateOnlineStatus);
+            
+            // Service Worker 등록 (오프라인 지원)
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            }
+        });
+    </script>
+</body>
+</html>
